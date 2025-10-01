@@ -4,6 +4,8 @@ dotenv.load_dotenv()
 
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, agent, task, crew # decorator
+from tools import count_letters
+
 
 # create crew
 @CrewBase
@@ -16,6 +18,13 @@ class TranslatorCrew:
 		)
 	# Agent Attributes: Role-agent가 crew안에서 어떤 역할을 하는지 알려주는 거 / Gola-의사결정할때 참고할 내용 / Backstory-agent의 성격이나 배경 같은 맥락
 
+	@agent
+	def counter_agent(self):
+		return Agent(
+			config=self.agents_config["counter_agent"],
+			tools=[count_letters]
+		)
+
 	@task
 	def translate_task(self):
 		return Task(
@@ -26,6 +35,12 @@ class TranslatorCrew:
 	def retranslate_task(self):
 		return Task(
 			config=self.tasks_config["retranslate_task"]
+		)
+
+	@task
+	def count_task(self):
+		return Task(
+			config=self.tasks_config["count_task"]
 		)
 
 	@crew
