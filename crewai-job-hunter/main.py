@@ -4,14 +4,15 @@ dotenv.load_dotenv()
 
 from crewai import Crew, Task, Agent
 from crewai.project import CrewBase, task, agent, crew
-
+from tools import web_search_tool
 @CrewBase
 class JobHunterCrew:
 
   @agent
   def job_search_agent(self):
     return Agent(
-      config=self.agents_config["job_search_agent"]
+      config=self.agents_config["job_search_agent"],
+      tools=[web_search_tool]
     )
 
   @agent
