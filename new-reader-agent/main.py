@@ -61,7 +61,7 @@ NewsReaderAgent().crew().kickoff(inputs={ "topic": "Stable coin" }) # tasks.yaml
 # class 안에 있는 tasks들은 자동으로 1번째 task가 끝나면 그 output이 다음 task의 input으로 가고 가고 가고.. 
 # 마지막 output으로 뭔가를 하고 싶으면 ? 
 
-response = NewsReaderAgent().crew().kickoff(inputs={ "topic": "Stable coin" })
+# response = NewsReaderAgent().crew().kickoff(inputs={ "topic": "Stable coin" })
 
 # for task_output in response.tasks_output: # tasks_output 접근 방법, type=list
 # 	# for문으로 개별 결과물 확인 가능

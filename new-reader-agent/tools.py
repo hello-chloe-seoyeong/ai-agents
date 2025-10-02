@@ -1,5 +1,6 @@
 import time
-from crewai_tools import tool, SerperDevTool
+from crewai.tools import tool
+from crewai_tools import SerperDevTool
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup # beautifulsoup: HTML을 다루고 조작하는 거, 태그 찾고, 바꾸고 지우고 등
 
