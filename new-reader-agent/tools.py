@@ -8,8 +8,6 @@ search_tool = SerperDevTool(
   n_results=5
 )
 
-search_tool.run(search_query="Cambodia Thai War")
-
 @tool
 def scrape_tool(url:str):
   """
