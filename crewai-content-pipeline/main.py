@@ -10,6 +10,12 @@ class ContentPipelineState(BaseModel):
 
   # Internal
   max_length: int = 0
+  score: int = 0
+
+  # Content
+  blog_post: str = ""
+  tweet: str = ""
+  linkedin_post: str = ""
 
 class ContentPipelineFlow(Flow[ContentPipelineState]):
 
@@ -35,7 +41,7 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
     return True
 
   @router(conduct_research)
-  def router(self):
+  def conduct_research_router(self):
     content_type = self.state.content_type
 
     if content_type == "blog":
@@ -45,16 +51,25 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
     else:
       return "make_linedin_post"
 
-  @listen("make_blog")
+  @listen(or_("make_blog", "remake_blog"))
   def handle_make_blog(self):
+
+    # if blog post has been made, show the old one to the ai and ask it to improve, else
+    # just ask to create.
     print("Making blog post...")
 
-  @listen("make_tweet")
+  @listen(or_("make_tweet", "remake_tweet"))
   def handle_make_tweet(self):
+
+    # if tweet has been made, show the old one to the ai and ask it to improve, else
+    # just ask to create.
     print("Making tweet...")
 
-  @listen("make_linkedin_post")
+  @listen(or_("make_linkedin_post", "remake_linkedin_post"))
   def handle_make_linkedin_post(self):
+
+    # if linkedin post has been made, show the old one to the ai and ask it to improve, else
+    # just ask to create.
     print("Making linkedin post...")
 
   @listen(handle_make_blog)
@@ -65,14 +80,30 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
   def check_virality(self):
     print("Checking virality...")
 
-  @listen(or_(check_seo, check_virality))
+  @router(or_(check_seo, check_virality))
+  def score_router(self):
+
+    content_type = self.state.content_type
+    score = self.state.score
+
+    if score >= 8:
+      return "check_passed"
+    else:
+      if content_type == "blog":
+        return "remake_blog"
+      elif content_type == "tweet":
+        return "remake_tweet"
+      else:
+        return "remake_linkedin_post"
+
+  @listen("check_passed")
   def finalize_content(self):
     print("Finalizing content")
 
 flow = ContentPipelineFlow()
 
 flow.plot()
-flow.kickoff(inputs={
+flow.kickoff(inputs={ # flowState 값을 kickoff할때 inputs로 넣을 수 있어
   "content_type": "tweet",
   "topic": "AI dog training"
 })
