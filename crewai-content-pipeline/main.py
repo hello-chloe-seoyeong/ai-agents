@@ -1,48 +1,78 @@
-from crewai.flow.flow import Flow, listen, start, router, and_, or_ # and_, or_ 모두 여러개의 function을 실행시킬수 있는데, and_는 모두 끝나야만, or_은 그중에 하나만 끝나고 코드 실행 가능 
+from crewai.flow.flow import Flow, start, listen, router, and_, or_
+from crewai import Agent
 from pydantic import BaseModel
 
-class MyFirstFlowState(BaseModel):
+class ContentPipelineState(BaseModel):
 
-  user_id: int = 1
-  is_admin: bool = False
+  # Inputs
+  content_type: str = ""
+  topic: str = ""
 
-# FLOW: 여러 개의 method를 가진 class. <= method는 클래스 안에 있는 function
-class MyFirstFlow(Flow[MyFirstFlowState]):
+  # Internal
+  max_length: int = 0
+
+class ContentPipelineFlow(Flow[ContentPipelineState]):
 
   @start()
-  def first(self):
-    print(self.state.user_id)
-    print("Hello")
+  def init_content_pipeline(self):
 
-  @listen(first) # first가 끝나길 기다리는거
-  def second(self):
-    self.state.user_id = 2
-    print("world")
+    if self.state.content_type not in ["tweet", "blog", "linkedin"]:
+      raise ValueError("The content type is wrong")
 
-  @listen(first)
-  def third(self):
-    print("!")
+    if self.state.topic == "":
+      raise ValueError("The topic can't be blank")
 
-  @listen(and_(second, third))
-  def final(self):
-    print(":)")
+    if self.state.content_type == "tweet":
+      self.state.max_length = 150
+    elif self.state.content_type == "blog":
+      self.state.max_length = 800
+    elif self.state.content_type == "linkedin":
+      self.state.max_length = 500
 
-  @router(final)
-  def route(self):
-    if self.state.is_admin:
-      return "even"
+  @listen(init_content_pipeline)
+  def conduct_research(self):
+    print("Researching...")
+    return True
+
+  @router(conduct_research)
+  def router(self):
+    content_type = self.state.content_type
+
+    if content_type == "blog":
+      return "make_blog"
+    elif content_type == "tweet":
+      return "make_tweet"
     else:
-      return "odd"
+      return "make_linedin_post"
 
-  @listen("even")
-  def handle_even(self):
-    print("even")
+  @listen("make_blog")
+  def handle_make_blog(self):
+    print("Making blog post...")
 
-  @listen("odd")
-  def handle_odd(self):
-    print("odd")
+  @listen("make_tweet")
+  def handle_make_tweet(self):
+    print("Making tweet...")
 
-flow = MyFirstFlow() # instance화
+  @listen("make_linkedin_post")
+  def handle_make_linkedin_post(self):
+    print("Making linkedin post...")
 
-flow.plot() # flow를 시각화해서 저장해줘
-flow.kickoff()
+  @listen(handle_make_blog)
+  def check_seo(self):
+    print("Checking Blog SEO...")
+
+  @listen(or_(handle_make_tweet, handle_make_linkedin_post))
+  def check_virality(self):
+    print("Checking virality...")
+
+  @listen(or_(check_seo, check_virality))
+  def finalize_content(self):
+    print("Finalizing content")
+
+flow = ContentPipelineFlow()
+
+flow.plot()
+flow.kickoff(inputs={
+  "content_type": "tweet",
+  "topic": "AI dog training"
+})
