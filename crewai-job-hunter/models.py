@@ -4,8 +4,9 @@
 
 from datetime import date
 from pydantic import BaseModel
+from typing import List
 
-class Job():
+class Job(BaseModel):
   job_title: str
   company_name: str
   job_location: str
@@ -15,16 +16,16 @@ class Job():
   job_posting_url: str
   job_summary: str
 
-  key_qualifications: list[str] | None = None
-  job_responsibilities: list[str] | None = None
+  key_qualifications: List[str] | None = None
+  job_responsibilities: List[str] | None = None
   date_listed: date | None = None
-  required_technologies: list[str] | None = None
-  core_keywords: list[str] | None = None
+  required_technologies: List[str] | None = None
+  core_keywords: List[str] | None = None
 
   role_seniority_level: str | None = None
   years_of_experience_required: str | None = None
   minimum_education: str | None = None
-  job_benefits: list[str] | None = None
+  job_benefits: List[str] | None = None
   includes_equity: bool | None = None
   offers_visa_sponsorship: bool | None = None
   hiring_company_size: str | None = None
@@ -37,7 +38,7 @@ class Job():
 # }
 
 class JobList(BaseModel):
-  jobs: list[Job]
+  jobs: List[Job]
 
 class RankedJob(BaseModel):
   job: Job
@@ -45,7 +46,7 @@ class RankedJob(BaseModel):
   reason: str
 
 class RankedJobList(BaseModel):
-  ranked_jobs: list[RankedJob]
+  ranked_jobs: List[RankedJob]
 
 class ChosenJob(BaseModel):
   job: Job

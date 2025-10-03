@@ -5,6 +5,7 @@ from crewai.tools import tool
 
 @tool
 def web_search_tool(query: str):
+  # docstring 써줘야함!
   """
   Search the jobs information
   """
@@ -41,7 +42,7 @@ def web_search_tool(query: str):
 
     title = result["title"]
     url = result["url"]
-    markdown = result["markdonw"]
+    markdown = result["markdown"]
 
     cleaned = re.sub(r'\\+|\n', '', markdown).strip() # \랑 \n줄바꿈을 ''으로 바꿀꺼고, 그걸 markdown에서 바꿔줄거야, 그리고 뒤(?) 공백 자르기
     cleaned = re.sub(r'\[[^\]]+\]\([^\]+\) |https?://[^\s]+', "", cleaned)

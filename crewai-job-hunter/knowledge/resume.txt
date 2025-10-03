@@ -1,84 +1,96 @@
-# Juan Srisaiwong
-**Full Stack Developer**
+# Chloe Seoyeong Ro
+**Web Developer**
 
-📧 juan.srisaiwong@email.com | 📱 +34 612 345 678
-🌐 LinkedIn: linkedin.com/srisaiwong | GitHub: github.com/srisaiwong
-📍 Copenhagen, Denmark
+📧 chloe.seoyeong@gmail.com | 📱 +1 604 735 4994
+🌐 LinkedIn: linkedin.com/in/chloe-seoyeong-ro | GitHub: github.com/hello-chloe-seoyeong
+📍 Vancouver, Canada
 
 ---
 
 ## Professional Summary
 
-Passionate Full Stack Developer with 3 years of experience building scalable web applications and modern user interfaces. Proficient in JavaScript ecosystem with expertise in React, Node.js, and cloud technologies. Strong problem-solving skills and collaborative approach to delivering high-quality software solutions.
+Web Developer with over 7 years of experience in website development and maintenance. Strong expertise in HTML, CSS, and JavaScript with a proven ability to quickly learn and adapt to new technologies as projects require. Currently expanding skills in modern full-stack development through took the course and self-directed learning.
 
 ---
 
 ## Technical Skills
 
-**Frontend:** React, Vue.js, HTML5, CSS3, Sass, TypeScript, JavaScript (ES6+), Bootstrap, Tailwind CSS
-**Backend:** Node.js, Express.js, Python, Django, RESTful APIs, GraphQL
-**Databases:** PostgreSQL, MySQL, MongoDB, Redis
-**Cloud & DevOps:** AWS (EC2, S3, Lambda), Docker, CI/CD, Git, GitHub Actions
-**Tools:** VS Code, Postman, Figma, Jira, Slack
+**Core Technologies**: HTML5, CSS3, JavaScript (ES6+)
+**Frontend Frameworks**: React, Next.js, Tailwind CSS
+**Backend & Databases**: Node.js, Python, MongoDB, PostgreSQL
+**DevOps & Tools**: Git, Jenkins, AWS (S3)
+**Currently Learning**: Python, Streamlit, CrewAI, etc
 
 ---
 
 ## Professional Experience
 
-### Full Stack Developer
-**TechSolutions Madrid** | Madrid, Spain | *March 2022 - Present*
+### Web Developer
+**T world** | Seoul, Korea | *July 2021 - June 2024*
 
-- Developed and maintained 5+ web applications serving over 10,000 users using React and Node.js
-- Implemented responsive designs that improved mobile user engagement by 40%
-- Built RESTful APIs and integrated third-party services, reducing data processing time by 25%
-- Collaborated with cross-functional teams using Agile methodologies
-- Optimized database queries resulting in 30% faster page load times
+- Collaborated with the team to gather requirements and ensure clear communication throughout development
+- Maintained and optimized existing web applications to ensure consistent performance and reliability
+- Implemented React components to enhance user interface functionality
+- Teach that how to use Git and Github to team members
 
-### Junior Full Stack Developer
-**StartupLab Barcelona** | Barcelona, Spain | *June 2021 - February 2022*
+### Web Developer
+**Lotte On** | Seoul, Korea | *December 2019 - March 2021*
 
-- Contributed to the development of an e-commerce platform using Vue.js and Express.js
-- Implemented user authentication and authorization systems
-- Participated in code reviews and maintained high code quality standards
-- Fixed bugs and implemented new features based on user feedback
-- Assisted in deployment processes and server maintenance
+- Assisted in implementing user-friendly web applications, contributing to improved functionality and user engagement
+- Using deployment processes Jenkins pipelines
+- Worked closely with team members to debug and resolve technical issues efficiently
+
+### Web Developer
+**Samsung Card** | Seoul, Korea | *June 2018 - August 2018*
+- Implemented web pages and features using core web technologies
+- Collaborated with designers and backend developers to deliver functional web solutions
+- Ensured cross-browser compatibility and responsive design standards
+
+### Web Developer
+**LG Service** | Seoul, Korea | *August 2016 - March 2018*
+- Collaborated closely with cross-functional teams to implement incremental improvements, demonstrating a deep understanding of system behavior and user needs
+- Maintained and updated existing web pages to meet evolving business requirements
+- Contributed to improving website performance and user experience through code optimization
 
 ---
 
 ## Education
 
-### Bachelor's Degree in Computer Science
-**Universidad Politécnica de Madrid** | Madrid, Spain | *2017 - 2021*
+### Degree in Web Development
+**Cornerstone International Canada College** | Vancouver, Canada | *September 2024 - August 2025*
 
-**Relevant Coursework:** Data Structures, Algorithms, Database Systems, Software Engineering, Web Development
+**Relevant Coursework:** Web Development, Databse - React, Nextjs, Tailwind, Mongodb, PostgreSQL, etc
+
+### Bachelor's Degree in Media Art(IT)
+**Soongsil Unversity** | Seoul, Korea | *March 2009 - February 2011*
 
 ---
 
 ## Projects
 
-### E-Commerce Dashboard
-*React, Node.js, PostgreSQL, AWS*
-- Built a comprehensive admin dashboard for managing products, orders, and customers
-- Implemented real-time analytics and reporting features
-- Deployed on AWS with automated CI/CD pipeline
-
-### Task Management App
-*Vue.js, Express.js, MongoDB*
-- Developed a collaborative task management application with real-time updates
-- Integrated user authentication and role-based permissions
-- Implemented drag-and-drop functionality and notification system
+### Lost & Found Dashboard
+*NextJs, Node.js, Supabase, Shadcn, Tailwind, Prisma, OpenAI, Gemini*
+- Built a comprehensive "Lost & Found" system for organizations to efficiently manage and track lost items
+- Integrated Supabase for real-time database management and authentication
+- Designed responsive UI components with Shadcn and Tailwind CSS for intuitive user experience
 
 ---
 
 ## Languages
 
-**Spanish:** Native
-**English:** Professional (C1)
-**Catalan:** Conversational (B2)
+**Korean:** Native
+**English:** Professional
 
 ---
 
 ## Certifications
+- 
 
-- AWS Certified Developer - Associate (2023)
-- React Developer Certification - Meta (2022)
+---
+
+## Key Strengths
+
+- Quick Learner: Rapidly acquires and applies new technical skills when needed
+- Reliable: 7+ years of consistent website development and maintenance experience
+- Self-Motivated: Proactively learning modern technologies to expand capabilities
+- Adaptable: Successfully works with various technologies across different projects
