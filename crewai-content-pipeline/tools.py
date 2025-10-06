@@ -7,7 +7,7 @@ from crewai.tools import tool
 def web_search_tool(query: str):
   # docstring 써줘야함!
   """
-  Search the jobs information
+  Search the web information
   """
 
   url = "https://api.firecrawl.dev/v2/search"

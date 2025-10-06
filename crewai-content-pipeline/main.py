@@ -3,14 +3,18 @@ from crewai.agent import Agent
 from crewai import LLM # agent 없이 AI와 직접 대화 할 수 있게 해주는 class
 from pydantic import BaseModel
 from tools import web_search_tool
+from seo_crew import SeoCrew
+from virality_crew import ViralityCrew
 
 class BlogPost(BaseModel):
   title: str
   subtitle: str
   sections: list[str]
+
 class Tweet(BaseModel):
   content: str
   hashtags: str
+
 class LinkedInPost(BaseModel):
   hook: str
   content: str
@@ -19,6 +23,7 @@ class LinkedInPost(BaseModel):
 class ContentScore(BaseModel):
   score: int = 0
   reason: str = ""
+
 class ContentPipelineState(BaseModel):
 
   # Inputs
@@ -28,7 +33,7 @@ class ContentPipelineState(BaseModel):
   # Internal
   max_length: int = 0
   score: ContentScore | None = None
-  research: str = 0 # researcher가 실행되고 결과물이 저장될 곳
+  research: str = "" # researcher가 실행되고 결과물이 저장될 곳
 
   # Content
   blog_post: BlogPost | None = None
@@ -63,7 +68,7 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
       tools=[web_search_tool]
     )
 
-    self.state.research = researcher.kickoff("")
+    self.state.research = researcher.kickoff(f"Find the most interesting and useful info about {self.state.topic}")
 
   @router(conduct_research)
   def conduct_research_router(self):
@@ -74,7 +79,7 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
     elif content_type == "tweet":
       return "make_tweet"
     else:
-      return "make_linedin_post"
+      return "make_linkedin_post"
 
   @listen(or_("make_blog", "remake_blog"))
   def handle_make_blog(self):
@@ -84,7 +89,8 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
     llm = LLM(model="openai/o4-mini", response_format=BlogPost) # output을 BlogPost 이 형태로 해줘!
 
     if blog_post is None:
-      self.state.blog_post = llm.call(
+      # self.state.blog_post = llm.call( ... ) 원래 이렇게만 해도 되는데 json으로 바꾸는 부분에서 버그있어서 result 넣은 뒤에 바꿔주기
+      result = llm.call(
         f"""
         Make a blog post on the topic {self.state.topic} using the following research:
 
@@ -96,7 +102,7 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
         """
       )
     else:
-      self.state.blog_post = llm.call(
+      result = llm.call(
         f"""
         You wrote this blog post on {self.state.topic}, but it does not have a good SEO score because of {self.state.score.reason}
         Improve it.
@@ -115,27 +121,109 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
         """
       )
 
+    self.state.blog_post = BlogPost.model_validate_json(result)
+
   @listen(or_("make_tweet", "remake_tweet"))
   def handle_make_tweet(self):
 
-    # if tweet has been made, show the old one to the ai and ask it to improve, else
-    # just ask to create.
-    print("Making tweet...")
+    tweet = self.state.tweet
+
+    llm = LLM(model="openai/o4-mini", response_format=Tweet) # output을 BlogPost 이 형태로 해줘!
+
+    if tweet is None:
+      result = llm.call(
+        f"""
+        Make a tweet on the topic {self.state.topic} using the following research:
+
+        <research>
+        ================
+        {self.state.research}
+        ================
+        </research>
+        """
+      )
+    else:
+      result = llm.call(
+        f"""
+        You wrote this tweet on {self.state.topic}, but it does not have a good virality score because of {self.state.score.reason}
+        Improve it.
+
+        <tweet>
+        {self.state.tweet.model_dump_json()}
+        </tweet>
+
+        Use the following research.
+
+        <research>
+        ================
+        {self.state.research}
+        ================
+        </research>
+        """
+      )
+
+    self.state.tweet = Tweet.model_validate_json(result)
 
   @listen(or_("make_linkedin_post", "remake_linkedin_post"))
   def handle_make_linkedin_post(self):
 
-    # if linkedin post has been made, show the old one to the ai and ask it to improve, else
-    # just ask to create.
-    print("Making linkedin post...")
+    linkedin_post = self.state.linkedin_post
+
+    llm = LLM(model="openai/o4-mini", response_format=LinkedInPost) # output을 BlogPost 이 형태로 해줘!
+
+    if linkedin_post is None:
+      result = llm.call(
+        f"""
+        Make a linkedin post on the topic {self.state.topic} using the following research:
+
+        <research>
+        ================
+        {self.state.research}
+        ================
+        </research>
+        """
+      )
+    else:
+      result = llm.call(
+        f"""
+        You wrote this blog post on {self.state.topic}, but it does not have a good virality score because of {self.state.score.reason}
+        Improve it.
+
+        <linkedin post>
+        {self.state.linkedin_post.model_dump_json()}
+        </linkedin post>
+
+        Use the following research.
+
+        <research>
+        ================
+        {self.state.research}
+        ================
+        </research>
+        """
+      )
+    self.state.linkedin_post = LinkedInPost.model_validate_json(result)
 
   @listen(handle_make_blog)
   def check_seo(self):
-    print("Checking Blog SEO...")
+    result = SeoCrew().crew().kickoff(inputs={
+      "topic": self.state.topic,
+      "blog_post": self.state.blog_post.model_dump_json() # pydantic -> json
+    }) # 여러개의 input에 대해 crew를 kickoff 할 수 있음
+
+    self.state.score = result.pydantic
+
+    print(self.state.score)
 
   @listen(or_(handle_make_tweet, handle_make_linkedin_post))
   def check_virality(self):
-    print("Checking virality...")
+    result = ViralityCrew().crew().kickoff(inputs={
+      "topic": self.state.topic,
+      "content_type": self.state.content_type,
+      "content": self.state.tweet.model_dump_json() if self.state.content_type == "tweet" else self.state.linkedin_post.model_dump_json()
+    }) # 여러개의 input에 대해 crew를 kickoff 할 수 있음
+
+    self.state.score = result.pydantic
 
   @router(or_(check_seo, check_virality))
   def score_router(self):
@@ -143,7 +231,7 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
     content_type = self.state.content_type
     score = self.state.score
 
-    if score >= 8:
+    if score.score >= 8: # score가 ContentScore 형태자나 score, reason 가지고 있는, 그래서 한번더 선택해줘야함
       return "check_passed"
     else:
       if content_type == "blog":
@@ -159,8 +247,8 @@ class ContentPipelineFlow(Flow[ContentPipelineState]):
 
 flow = ContentPipelineFlow()
 
-flow.plot()
+# flow.plot()
 flow.kickoff(inputs={ # flowState 값을 kickoff할때 inputs로 넣을 수 있어
-  "content_type": "blog",
-  "topic": "AI dog training"
+  "content_type": "tweet",
+  "topic": "AI dog training",
 })
